@@ -1,5 +1,4 @@
 import { allPosts } from "content-collections";
-import { notFound } from "next/navigation";
 import { MDXContent } from "@content-collections/mdx/react";
 import {
   TableOfContent,
@@ -7,13 +6,14 @@ import {
 } from "@/components/TableOfContent";
 import React from "react";
 import Image from "next/image";
+import { GetStaticProps, GetStaticPaths } from "next";
 
 function Header({
   post,
 }: {
   post: {
     title: string;
-    date: Date;
+    date: string;
     readingTime: string;
     category: string;
     thumbnail: string;
@@ -27,7 +27,7 @@ function Header({
           {post.title}
         </h1>
         <div className="flex space-x-3 mt-5">
-          <div className="text-sm text-gray-700">{post.date.toDateString()}</div>
+          <div className="text-sm text-gray-700">{post.date}</div>
           <div className="text-gray-700">·</div>
           <div className="text-sm text-gray-700">{post.readingTime}</div>
           <div className="text-gray-700">·</div>
@@ -51,15 +51,13 @@ function Header({
   );
 }
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const { slug } = await params;
-  const post = allPosts.find((post) => post._meta.path === slug);
+interface PostPageProps {
+  post: typeof allPosts[0];
+}
+
+export default function PostPage({ post }: PostPageProps) {
   if (!post) {
-    return notFound();
+    return <div>Post not found</div>;
   }
 
   return (
@@ -79,7 +77,7 @@ export default async function Page({
           </div>
           {post.show_toc ? (
             <div className="hidden md:block ml-10">
-              <div className="fixed top-10  border-gray-200 pl-5 py-2 border-l">
+              <div className="fixed top-20  border-gray-200 pl-5 py-2 border-l">
                 <TableOfContent toc={post.toc}></TableOfContent>
               </div>
             </div>
@@ -90,10 +88,29 @@ export default async function Page({
   );
 }
 
-export const generateStaticParams = async () => {
-  return allPosts.map((post) => ({
-    slug: post._meta.path,
+export const getStaticPaths: GetStaticPaths = async () => {
+  const paths = allPosts.map((post) => ({
+    params: { slug: post._meta.path },
   }));
+
+  return {
+    paths,
+    fallback: false,
+  };
 };
 
-export const dynamicParams = false;
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  const post = allPosts.find((post) => post._meta.path === params?.slug);
+
+  if (!post) {
+    return {
+      notFound: true,
+    };
+  }
+
+  return {
+    props: {
+      post,
+    },
+  };
+}; 
