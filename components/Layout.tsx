@@ -10,14 +10,14 @@ export default function Layout({ children }: LayoutProps) {
     <div className="min-h-screen bg-white">
       <nav className="border-b border-gray-200">
         <div className="flex justify-center">
-          <div className="md:w-[45%] w-full py-4">
-            <Link href="/" className="text-xl font-medium">
-              Ibnu.dev
+          <div className="md:w-[45%] w-full py-5 ">
+            <Link href="/" className="text-xl font-bold">
+              Ibnu Musyaffa
             </Link>
           </div>
         </div>
       </nav>
-      <main className="py-10">{children}</main>
+      <main className="py-7">{children}</main>
     </div>
   );
 } 

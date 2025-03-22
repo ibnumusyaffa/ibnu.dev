@@ -7,6 +7,7 @@ import {
 import React from "react";
 import Image from "next/image";
 import { GetStaticProps, GetStaticPaths } from "next";
+import dayjs from "dayjs";
 
 function Header({
   post,
@@ -27,7 +28,7 @@ function Header({
           {post.title}
         </h1>
         <div className="flex space-x-3 mt-5">
-          <div className="text-sm text-gray-700">{post.date}</div>
+          <div className="text-sm text-gray-700">{dayjs(post.date).format("MMMM D, YYYY")}</div>
           <div className="text-gray-700">·</div>
           <div className="text-sm text-gray-700">{post.readingTime}</div>
           <div className="text-gray-700">·</div>
@@ -62,9 +63,9 @@ export default function PostPage({ post }: PostPageProps) {
 
   return (
     <div>
-      <article className="mb-10 ">
+      <article className="mb-10">
         <div className="relative flex justify-center">
-          <div className="md:w-[45%] w-full">
+          <div className="md:w-[45%] w-full ">
             <Header post={post}></Header>
             {post.show_toc ? (
               <div className="border border-gray-200 md:hidden bg-gray-50 rounded">
@@ -76,8 +77,8 @@ export default function PostPage({ post }: PostPageProps) {
             </div>
           </div>
           {post.show_toc ? (
-            <div className="hidden md:block ml-10">
-              <div className="fixed top-20  border-gray-200 pl-5 py-2 border-l">
+            <div className="fixed top-24 right-0  hidden md:block w-[23%]">
+              <div className="  border-gray-200 pl-5 py-2 border-l">
                 <TableOfContent toc={post.toc}></TableOfContent>
               </div>
             </div>

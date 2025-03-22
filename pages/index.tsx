@@ -2,6 +2,7 @@ import { allPosts } from "content-collections";
 import Link from "next/link";
 import React from "react";
 import { GetStaticProps } from "next";
+import dayjs from "dayjs";
 
 interface HomeProps {
   posts: typeof allPosts;
@@ -9,11 +10,11 @@ interface HomeProps {
 
 export default function Home({ posts }: HomeProps) {
   return (
-    <div className="min-h-screen bg-white">
-      <div className="max-w-2xl mx-auto">
+    <div className="min-h-screen ">
+      <div className="md:w-[45%] mx-auto ">
         <div className="mb-10">
           <h1 className="text-3xl font-medium text-gray-900 mb-4">
-            Blog Posts
+            Tulisan
           </h1>
           <div className="w-12 h-1 bg-gray-900"></div>
         </div>
@@ -28,7 +29,9 @@ export default function Home({ posts }: HomeProps) {
                       {post.title}
                     </h2>
                     <div className="mt-2 flex items-center gap-3 text-sm text-gray-500">
-                      <time dateTime={post.date}>{post.date}</time>
+                      <time dateTime={post.date} className="text-sm text-gray-500">
+                        {dayjs(post.date).format("MMMM D, YYYY")}
+                      </time>
                     </div>
                   </div>
                 </div>
@@ -50,11 +53,13 @@ export default function Home({ posts }: HomeProps) {
 export const getStaticProps: GetStaticProps = async () => {
   return {
     props: {
-      posts: allPosts.map((post) => ({
-        url: post.url,
-        title: post.title,
-        date: post.date,
-      })),
+      posts: allPosts
+        .map((post) => ({
+          url: post.url,
+          title: post.title,
+          date: post.date,
+        }))
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()),
     },
   };
 };

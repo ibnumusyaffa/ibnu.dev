@@ -71,14 +71,14 @@ export function TableOfContent({ toc }: TocProps) {
   const [activeId, setActiveId] = React.useState<string | undefined>();
   useIntersectionObserver(setActiveId);
   return (
-    <div className="flex flex-col justify-center  ">
+    <div className="flex flex-col justify-center">
       <div className="space-y-2">
         {toc.map((item) => {
           const isActive = item.href === `#${activeId}`;
           return (
             <a
               key={item.href}
-              className={clsx("block hover:underline text-sm ", {
+              className={clsx("block hover:underline text-sm max-w-[300px] truncate", {
                 "pl-0": item.level == 2,
                 "pl-5": item.level == 3,
                 "text-purple-700 font-medium": isActive,

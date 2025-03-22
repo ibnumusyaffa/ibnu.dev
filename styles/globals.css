@@ -28,3 +28,12 @@ code[data-line-numbers-max-digits="3"] > [data-line]::before {
 code[data-line-numbers-max-digits="4"] > [data-line]::before {
   width: 2.25rem;
 }
+
+/* Font configurations */
+main {
+  font-family: var(--font-inter);
+}
+
+code {
+  font-family: var(--font-jetbrains-mono);
+}
