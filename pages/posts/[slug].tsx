@@ -5,6 +5,7 @@ import {
   TableOfContentMobile,
 } from "@/components/TableOfContent";
 import React from "react";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import Image from "next/image";
 import { GetStaticProps, GetStaticPaths } from "next";
 import dayjs from "dayjs";
@@ -22,38 +23,25 @@ function Header({
   };
 }) {
   return (
-    <React.Fragment>
-      <header className="mb-10 mt-3 flex md:items-center flex-col">
-        <h1 className="text-3xl md:text-4xl  font-semibold md:text-center capitalize">
+    <div className="border-b-2 border-black">
+      <header className="flex flex-col bg-green-300 px-10 py-10">
+        <h1 className="text-3xl   font-semibold  capitalize">
           {post.title}
         </h1>
-        <div className="flex space-x-3 mt-5">
-          <div className="text-sm text-gray-700">{dayjs(post.date).format("MMMM D, YYYY")}</div>
-          <div className="text-gray-700">·</div>
-          <div className="text-sm text-gray-700">{post.readingTime}</div>
-          <div className="text-gray-700">·</div>
-          <div>
-            <div>{post.category}</div>
+        <div className="flex gap-2 mt-5">
+          <div className="text-gray-700">
+            {dayjs(post.date).format("MMMM D, YYYY")}
           </div>
+          <div className="text-gray-700">·</div>
+          <div className="text-gray-700">{post.readingTime}</div>
         </div>
       </header>
-      {post.thumbnail && post.show_thumbnail ? (
-        <div className="mb-10">
-          <Image
-            className="rounded"
-            src={"/" + post.thumbnail}
-            width={1920}
-            height={1080}
-            alt={post.title}
-          />
-        </div>
-      ) : null}
-    </React.Fragment>
+    </div>
   );
 }
 
 interface PostPageProps {
-  post: typeof allPosts[0];
+  post: (typeof allPosts)[0];
 }
 
 export default function PostPage({ post }: PostPageProps) {
@@ -62,30 +50,40 @@ export default function PostPage({ post }: PostPageProps) {
   }
 
   return (
-    <div>
-      <article className="mb-10">
-        <div className="relative flex justify-center">
-          <div className="md:w-[45%] w-full ">
-            <Header post={post}></Header>
-            {post.show_toc ? (
-              <div className="border border-gray-200 md:hidden bg-gray-50 rounded">
-                <TableOfContentMobile toc={post.toc}></TableOfContentMobile>
-              </div>
-            ) : null}
-            <div className="prose prose-purple max-w-full mt-5">
-              <MDXContent code={post.mdx} />
-            </div>
-          </div>
-          {post.show_toc ? (
-            <div className="fixed top-24 right-0  hidden md:block w-[23%]">
-              <div className="  border-gray-200 pl-5 py-2 border-l">
-                <TableOfContent toc={post.toc}></TableOfContent>
-              </div>
+    <article className="mb-10">
+      <div className="relative flex justify-center">
+        <div className="md:w-[50%] w-full bg-white border-2 border-black">
+          <Header post={post}></Header>
+
+          {post.thumbnail && post.show_thumbnail ? (
+            <div className="px-10 mt-10 relative">
+              <Image
+                src={"/" + post.thumbnail}
+                width={700}
+                height={100}
+                // fill={true}
+                alt={post.title}
+              />
             </div>
           ) : null}
+          {post.show_toc ? (
+            <div className="border border-gray-200 md:hidden bg-gray-50 rounded">
+              <TableOfContentMobile toc={post.toc}></TableOfContentMobile>
+            </div>
+          ) : null}
+          <div className="prose prose-purple max-w-full  p-10">
+            <MDXContent code={post.mdx} />
+          </div>
         </div>
-      </article>
-    </div>
+        {post.show_toc ? (
+          <div className="fixed top-27 right-0  hidden md:block w-[23%]">
+            <div className=" pl-5 py-2 border-l border-gray-300">
+              <TableOfContent toc={post.toc}></TableOfContent>
+            </div>
+          </div>
+        ) : null}
+      </div>
+    </article>
   );
 }
 
@@ -114,4 +112,4 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       post,
     },
   };
-}; 
+};

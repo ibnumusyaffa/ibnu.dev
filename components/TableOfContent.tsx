@@ -81,8 +81,8 @@ export function TableOfContent({ toc }: TocProps) {
               className={clsx("block hover:underline text-sm max-w-[300px] truncate", {
                 "pl-0": item.level == 2,
                 "pl-5": item.level == 3,
-                "text-purple-700 font-medium": isActive,
-                "text-gray-600": !isActive,
+                "text-green-600  font-bold": isActive,
+                "text-gray-900": !isActive,
               })}
               href={item.href}
               onClick={(e) => {

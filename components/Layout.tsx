@@ -7,17 +7,22 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   return (
-    <div className="min-h-screen bg-white">
-      <nav className="border-b border-gray-200">
+    <div className="min-h-screen ">
+      <nav className=" bg-black text-white ">
         <div className="flex justify-center">
-          <div className="md:w-[45%] w-full py-5 ">
-            <Link href="/" className="text-xl font-bold">
-              Ibnu Musyaffa
+          <div className="md:w-[50%] w-full py-5  flex justify-between items-center">
+            <Link href="/" className="text-xl font-medium transition-colors">
+              Ibnu.dev
             </Link>
+            <div className="flex gap-6">
+              <Link href="/about" className=" transition-colors">
+                About
+              </Link>
+            </div>
           </div>
         </div>
       </nav>
-      <main className="py-7">{children}</main>
+      <main className="py-10 bg-yellow-50">{children}</main>
     </div>
   );
 } 
