@@ -9,6 +9,8 @@ import React from "react";
 import Image from "next/image";
 import { GetStaticProps, GetStaticPaths } from "next";
 import dayjs from "dayjs";
+import Meta from "@/components/Meta";
+import Giscus from "@giscus/react";
 
 function Header({
   post,
@@ -25,9 +27,7 @@ function Header({
   return (
     <div className="border-b-2 border-black">
       <header className="flex flex-col bg-green-300 px-10 py-10">
-        <h1 className="text-3xl   font-semibold  capitalize">
-          {post.title}
-        </h1>
+        <h1 className="text-3xl   font-semibold  capitalize">{post.title}</h1>
         <div className="flex gap-2 mt-5">
           <div className="text-gray-700">
             {dayjs(post.date).format("MMMM D, YYYY")}
@@ -51,8 +51,15 @@ export default function PostPage({ post }: PostPageProps) {
 
   return (
     <article className="mb-10">
-      <div className="relative flex justify-center">
-        <div className="md:w-[50%] w-full bg-white border-2 border-black">
+      <Meta
+        title={post.title}
+        description={post.description}
+        date={post.date}
+        url={post.url}
+      ></Meta>
+      <div className="relative grid grid-cols-[1fr_50%_1fr]  min-h-screen ">
+        <div className=""></div>
+        <div className=" bg-white border-2 border-black">
           <Header post={post}></Header>
 
           {post.thumbnail && post.show_thumbnail ? (
@@ -76,12 +83,28 @@ export default function PostPage({ post }: PostPageProps) {
           </div>
         </div>
         {post.show_toc ? (
-          <div className="fixed top-27 right-0  hidden md:block w-[23%]">
-            <div className=" pl-5 py-2 border-l border-gray-300">
+          <div className="sticky top-5 right-0 hidden md:block  max-h-screen ">
+            <div className="pl-5 py-2 border-l border-gray-300 ml-5">
               <TableOfContent toc={post.toc}></TableOfContent>
             </div>
           </div>
         ) : null}
+      </div>
+      <div className="flex justify-center mt-10">
+        <div className="md:w-[50%] w-full bg-white border-2 border-black p-10">
+          <Giscus
+            repo="ibnumusyaffa/ibnu.dev"
+            repoId="MDEwOlJlcG9zaXRvcnkzNjMwMjEwNzk="
+            category="General"
+            categoryId="DIC_kwDOFaNDF84CO_nG"
+            mapping="pathname"
+            reactionsEnabled="1"
+            emitMetadata="0"
+            inputPosition="top"
+            theme="light"
+            lang="en"
+          ></Giscus>
+        </div>
       </div>
     </article>
   );
@@ -99,7 +122,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const post = allPosts.find((post) => post._meta.path === params?.slug);
+  const post = allPosts.find((post) => post.slug === params?.slug && post.is_published);
 
   if (!post) {
     return {
