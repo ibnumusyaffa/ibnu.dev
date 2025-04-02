@@ -72,6 +72,7 @@ export function TableOfContent({ toc }: TocProps) {
   useIntersectionObserver(setActiveId);
   return (
     <div className="flex flex-col justify-center">
+      <div className="font-bold mb-1.5 text-gray-800 uppercase">Daftar Isi</div>
       <div className="space-y-2">
         {toc.map((item) => {
           const isActive = item.href === `#${activeId}`;
@@ -106,8 +107,8 @@ export function TableOfContent({ toc }: TocProps) {
 
 export function TableOfContentMobile({ toc }: TocProps) {
   return (
-    <div className="flex flex-col justify-center p-5 ">
-      <div className="font-semibold mb-1.5 text-gray-800 uppercase">
+    <div className="flex flex-col justify-center p-5 bg-gray-50 border border-gray-300 ">
+      <div className="font-bold mb-1.5 text-gray-800 uppercase">
         Daftar Isi
       </div>
       <div className="space-y-2">

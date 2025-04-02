@@ -11,11 +11,10 @@ interface HomeProps {
 
 export default function Home({ posts }: HomeProps) {
   return (
-    <div className="min-h-screen">
+    <div>
       <Meta
         title="Ibnu Musyaffa"
-        description="Ibnu Musyaffa"
-        date="2025-03-23"
+        description="Tulisan seputar pengembangan perangkat lunak dan teknologi lainnya"
         url="https://ibnu.dev"
       ></Meta>
 
@@ -23,7 +22,7 @@ export default function Home({ posts }: HomeProps) {
         <div className="text-lg font-medium">Ditulis oleh Ibnu Musyaffa</div>
       </div> */}
 
-      <div className="md:w-[50%] mx-auto bg-white  border-2 border-black mt-5">
+      <div className="md:w-[50%] mx-auto bg-white  border-2 border-black">
         <div className=" px-10 py-5 border-b-2  border-black bg-sky-300">
           <h1 className="mb-2 text-2xl font-medium text-gray-900">Blog</h1>
           <div className="w-12 h-1 bg-gray-900"></div>
@@ -35,15 +34,15 @@ export default function Home({ posts }: HomeProps) {
               <article className="relative">
                 <div className="flex items-start gap-4">
                   <div className="flex-1">
-                    <h2 className="text-xl text-gray-950 hover:underline">
+                    <h2 className="text-lg md:text-xl text-gray-950 hover:underline">
                       {post.title}
                     </h2>
                     <div className="mt-2 flex items-center gap-3 text-sm text-gray-500">
                       <time
-                        dateTime={post.date}
+                        dateTime={post.published_at}
                         className="text-sm text-gray-500"
                       >
-                        {dayjs(post.date).format("MMMM D, YYYY")}
+                        {dayjs(post.published_at).format("D MMM YYYY")}
                       </time>
                     </div>
                   </div>
@@ -65,10 +64,12 @@ export const getStaticProps: GetStaticProps = async () => {
         .map((post) => ({
           url: post.url,
           title: post.title,
-          date: post.date,
+          published_at: post.published_at,
         }))
         .sort(
-          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+          (a, b) =>
+            new Date(b.published_at).getTime() -
+            new Date(a.published_at).getTime()
         ),
     },
   };

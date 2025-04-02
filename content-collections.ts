@@ -15,9 +15,8 @@ const posts = defineCollection({
   directory: "posts",
   include: "**/*.mdx",
   schema: (z) => ({
-    date: z.string(),
-    category: z.string(),
-    category_color: z.string(),
+    published_at: z.string(),
+    updated_at: z.string(),
     title: z.string(),
     description: z.string(),
     thumbnail: z.string(),
@@ -48,7 +47,7 @@ const posts = defineCollection({
       ...post,
       mdx,
       slug: post._meta.path,
-      url: `/posts/${post._meta.path}`,
+      url: `/article/${post._meta.path}`,
       readingTime: readingTime(post.content).text,
       toc,
     };

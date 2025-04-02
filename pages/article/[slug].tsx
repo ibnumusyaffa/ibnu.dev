@@ -1,4 +1,4 @@
-import { allPosts } from "content-collections";
+import { allPosts, Post } from "content-collections";
 import { MDXContent } from "@content-collections/mdx/react";
 import {
   TableOfContent,
@@ -12,25 +12,14 @@ import dayjs from "dayjs";
 import Meta from "@/components/Meta";
 import Giscus from "@giscus/react";
 
-function Header({
-  post,
-}: {
-  post: {
-    title: string;
-    date: string;
-    readingTime: string;
-    category: string;
-    thumbnail: string;
-    show_thumbnail: boolean;
-  };
-}) {
+function Header({ post }: { post: Post }) {
   return (
     <div className="border-b-2 border-black">
       <header className="flex flex-col bg-green-300 px-10 py-10">
         <h1 className="text-3xl   font-semibold  capitalize">{post.title}</h1>
         <div className="flex gap-2 mt-5">
           <div className="text-gray-700">
-            {dayjs(post.date).format("MMMM D, YYYY")}
+            {dayjs(post.published_at).format("D MMM YYYY")}
           </div>
           <div className="text-gray-700">·</div>
           <div className="text-gray-700">{post.readingTime}</div>
@@ -54,31 +43,36 @@ export default function PostPage({ post }: PostPageProps) {
       <Meta
         title={post.title}
         description={post.description}
-        date={post.date}
         url={post.url}
+        type="article"
+        publishDate={post.published_at}
+        modifiedDate={post.updated_at}
       ></Meta>
-      <div className="relative grid grid-cols-[1fr_50%_1fr]  min-h-screen ">
+
+      <div className="relative md:grid md:grid-cols-[1fr_50%_1fr]  min-h-screen ">
         <div className=""></div>
-        <div className=" bg-white border-2 border-black">
+        <div className=" bg-white border-2 border-black ">
           <Header post={post}></Header>
 
           {post.thumbnail && post.show_thumbnail ? (
-            <div className="px-10 mt-10 relative">
+            <div className="px-5 pt-5 md:p-10 relative">
               <Image
                 src={"/" + post.thumbnail}
-                width={700}
-                height={100}
-                // fill={true}
+                className="aspect-video object-cover"
+                height={450}
+                width={800}
                 alt={post.title}
               />
             </div>
           ) : null}
           {post.show_toc ? (
-            <div className="border border-gray-200 md:hidden bg-gray-50 rounded">
-              <TableOfContentMobile toc={post.toc}></TableOfContentMobile>
+            <div className="p-5 md:p-0 md:hidden ">
+             
+                <TableOfContentMobile toc={post.toc}></TableOfContentMobile>
+             
             </div>
           ) : null}
-          <div className="prose prose-purple max-w-full  p-10">
+          <div className="prose prose-purple prose-pre:-mx-5 md:prose-pre:-mx-10 prose-pre:rounded-none max-w-full px-5 md:px-10 pb-5 md:pb-10">
             <MDXContent code={post.mdx} />
           </div>
         </div>
@@ -122,7 +116,9 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const post = allPosts.find((post) => post.slug === params?.slug && post.is_published);
+  const post = allPosts.find(
+    (post) => post.slug === params?.slug && post.is_published
+  );
 
   if (!post) {
     return {
