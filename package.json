@@ -11,7 +11,6 @@
   "dependencies": {
     "@giscus/react": "^3.1.0",
     "@heroicons/react": "^2.2.0",
-    "@next/font": "^14.2.15",
     "@vercel/og": "^0.6.5",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
