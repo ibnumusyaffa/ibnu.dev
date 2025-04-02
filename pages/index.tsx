@@ -13,7 +13,7 @@ export default function Home({ posts }: HomeProps) {
   return (
     <div>
       <Meta
-        title="Ibnu Musyaffa"
+        title="Ibnu Musyaffa - Blog"
         description="Tulisan seputar pengembangan perangkat lunak dan teknologi lainnya"
         url="https://ibnu.dev"
       ></Meta>

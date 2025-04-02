@@ -23,7 +23,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   return new ImageResponse(
     (
       <div tw="p-10 flex h-full bg-yellow-50">
-        <div tw="flex relative flex-col p-12 w-full h-full items-start bg-green-300 border-2 border-black">
+        <div tw="flex relative flex-col p-12 w-full h-full items-start bg-green-300 border-3 border-black">
           <div tw="flex flex-col flex-1 pb-10 pt-8">
             <div
               tw="flex text-4xl text-black"
