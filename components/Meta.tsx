@@ -26,20 +26,6 @@ function Meta({
     publishDate || ""
   )}&cache=${Math.floor(Date.now() / 1000)}`;
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": type === "article" ? "BlogPosting" : "Website",
-    headline: title,
-    author: {
-      "@type": "Person",
-      name: "Ibnu Musyaffa",
-    },
-    datePublished: publishDate,
-    dateModified: modifiedDate || publishDate,
-    description: description,
-    image: thumbnail,
-    url: fullUrl,
-  };
 
   return (
     <Head>
@@ -83,12 +69,6 @@ function Meta({
           <meta property="article:author" content="Ibnu Musyaffa" />
         </>
       )}
-
-      {/* Add JSON-LD */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
     </Head>
   );
 }

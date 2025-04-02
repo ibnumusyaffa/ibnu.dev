@@ -67,9 +67,7 @@ export default function PostPage({ post }: PostPageProps) {
           ) : null}
           {post.show_toc ? (
             <div className="p-5 md:p-0 md:hidden ">
-             
-                <TableOfContentMobile toc={post.toc}></TableOfContentMobile>
-             
+              <TableOfContentMobile toc={post.toc}></TableOfContentMobile>
             </div>
           ) : null}
           <div className="prose prose-purple prose-pre:-mx-5 md:prose-pre:-mx-10 prose-pre:rounded-none max-w-full px-5 md:px-10 pb-5 md:pb-10">
