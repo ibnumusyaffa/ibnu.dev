@@ -9,7 +9,7 @@ interface ContactLinkProps {
 
 export default function ContactLink({ href, icon, children }: ContactLinkProps) {
   return (
-    <li className=" text-gray-600 dark:text-gray-400">
+    <div className=" text-gray-600 dark:text-gray-400">
       <div className="flex items-center gap-3">
       <span className="text-gray-500 dark:text-gray-400">{icon}</span>
       <Link
@@ -20,6 +20,6 @@ export default function ContactLink({ href, icon, children }: ContactLinkProps) 
       </Link>
       </div>
     
-    </li>
+    </div>
   );
 } 

@@ -6,7 +6,7 @@ interface MetaProps {
   description: string;
   url: string;
 
-  type?: "website" | "article"; // Add type for different schemas
+  type?: "website" | "article" | "profile"; // Add type for different schemas
   publishDate?: string;
   modifiedDate?: string;
 }
@@ -19,7 +19,7 @@ function Meta({
   publishDate,
   modifiedDate,
 }: MetaProps) {
-  const fullUrl = `${process.env.NEXT_PUBLIC_URL}/${url}`;
+  const fullUrl = `${process.env.NEXT_PUBLIC_URL}${url}`;
   const thumbnail = `${
     process.env.NEXT_PUBLIC_URL
   }/api/image?title=${encodeURIComponent(title)}&date=${encodeURIComponent(
@@ -40,7 +40,7 @@ function Meta({
       <meta name="author" content="Ibnu Musyaffa" />
       <link rel="canonical" href={fullUrl} />
       {/* Open Graph */}
-      <meta property="og:type" content="website" />
+      <meta property="og:type" content={type} />
       <meta property="og:url" content={fullUrl} />
       <meta property="og:title" content={title} />
       <meta property="og:site_name" content="ibnu.dev" />
@@ -57,6 +57,7 @@ function Meta({
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description || ""} />
       <meta name="twitter:image" content={thumbnail} />
+      <meta name="twitter:image:alt" content={title} />
 
       {/* Add article-specific meta tags */}
       {type === "article" && (

@@ -15,7 +15,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       : "My default title"
   ) as string;
 
-  const fontSize = heading.length > 100 ? "60px" : "80px";
+  const fontSize = heading.length > 100 ? "60px" : "75px";
   const date = searchParams.get("date")
     ? dayjs(searchParams.get("date")).format("DD MMMM YYYY")
     : "";

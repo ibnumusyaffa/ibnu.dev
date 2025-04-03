@@ -11,11 +11,15 @@ export default function Layout({ children }: LayoutProps) {
       <nav className=" bg-black text-white ">
         <div className="flex justify-center">
           <div className="md:w-[50%] w-full py-5  flex justify-between items-center px-5 md:px-0">
-            <Link href="/" className="text-xl font-medium transition-colors">
+            <Link href="/" className="text-xl font-medium">
               Ibnu.dev
             </Link>
             <div className="flex gap-6">
-              <Link href="/about" className=" transition-colors">
+              <Link href="/" className="">
+                Blog
+              </Link>
+
+              <Link href="/about" className="">
                 About
               </Link>
             </div>
@@ -25,4 +29,4 @@ export default function Layout({ children }: LayoutProps) {
       <main className="px-5 py-5 md:px-0 md:py-8">{children}</main>
     </div>
   );
-} 
+}

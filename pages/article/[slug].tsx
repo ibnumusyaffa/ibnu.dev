@@ -86,15 +86,17 @@ export default function PostPage({ post }: PostPageProps) {
         <div className="md:w-[50%] w-full bg-white border-2 border-black p-10">
           <Giscus
             repo="ibnumusyaffa/ibnu.dev"
-            repoId="MDEwOlJlcG9zaXRvcnkzNjMwMjEwNzk="
+            repoId="R_kgDOOSvFvA"
             category="General"
-            categoryId="DIC_kwDOFaNDF84CO_nG"
+            categoryId="DIC_kwDOOSvFvM4CoulE"
             mapping="pathname"
+            strict="0"
             reactionsEnabled="1"
             emitMetadata="0"
             inputPosition="top"
-            theme="light"
-            lang="en"
+            theme="preferred_color_scheme"
+            lang="id"
+            loading="lazy"
           ></Giscus>
         </div>
       </div>
