@@ -1,10 +1,3 @@
-import {
-  EnvelopeIcon,
-  CodeBracketIcon,
-  ChatBubbleLeftRightIcon,
-  BriefcaseIcon,
-} from "@heroicons/react/24/outline";
-import ContactLink from "@/components/ContactLink";
 import Meta from "@/components/Meta";
 
 export default function About() {
@@ -16,49 +9,72 @@ export default function About() {
         url="https://ibnu.dev"
       ></Meta>
 
-      <div className="md:w-[50%] mx-auto bg-white border-2 border-black p-10 min-h-screen">
-        <div className="prose prose-lg dark:prose-invert max-w-none">
-          <div className="text-3xl font-medium text-gray-900 dark:text-white mb-6">
-            About
-          </div>
-
-          <p className="mb-12 text-gray-700leading-relaxed">
-            Hi, I am <b>Ibnu Musyaffa</b>, a software engineer with 10+ years of
-            experience. I love to code and build products that help people to
-            live better life.
+      <div className="md:w-[50%] mx-auto bg-white border-2 border-black p-5 md:p-10 min-h-screen">
+        <div className="prose prose-base">
+          <h2>Tentang Saya</h2>
+          <p>
+            Halo! Saya <strong>Ibnu Musyaffa</strong>, seorang Software Engineer
+            dari Jawa Tengah, Indonesia. Selamat datang di blog saya!
           </p>
 
-          <section>
-            <p className="text-2xl font-medium text-gray-900 dark:text-white mb-6">
-              Feel free to contact me
-            </p>
-            <div className="space-y-5">
-              <ContactLink
+          <p>
+            Di blog ini, saya berbagi pengalaman dan wawasan seputar
+            pengembangan perangkat lunak dan teknologi web.
+          </p>
+
+          <h3>Skillset:</h3>
+          <ul>
+            <li>
+              <strong>Bahasa:</strong> Javascript/Typescript, PHP, Golang
+            </li>
+            <li>
+              <strong>Framework/Library:</strong> React, Next.js, Node.js,
+              Laravel, Tailwind CSS
+            </li>
+            <li>
+              <strong>Database:</strong> MySQL, Postgres, Elasticsearch, Redis
+            </li>
+            <li>
+              <strong>DevOps & Lainnya:</strong> Linux, Docker, Kubernetes,
+              Grafana Stack
+            </li>
+          </ul>
+
+          <h3>Kontak:</h3>
+          <ul>
+            <li>
+              <strong>GitHub: </strong>
+              <a
                 href="https://github.com/ibnumusyaffa"
-                icon={<CodeBracketIcon className="h-5 w-5" />}
+                target="_blank"
+                className="text-blue-700 no-underline"
               >
                 github.com/ibnumusyaffa
-              </ContactLink>
-              <ContactLink
-                href="https://twitter.com/ibnumusyaffa"
-                icon={<ChatBubbleLeftRightIcon className="h-5 w-5" />}
-              >
-                twitter.com/ibnumusyaffa
-              </ContactLink>
-              <ContactLink
-                href="mailto:ibnu.musyaffa@gmail.com"
-                icon={<EnvelopeIcon className="h-5 w-5" />}
-              >
-                ibnu.musyaffa@gmail.com
-              </ContactLink>
-              <ContactLink
-                href="https://www.linkedin.com/in/ibnumusyaffa/"
-                icon={<BriefcaseIcon className="h-5 w-5" />}
+              </a>
+            </li>
+            <li>
+              <strong>LinkedIn: </strong>
+              <a
+                href="https://www.linkedin.com/in/ibnu-musyaffa"
+                target="_blank"
+                className="text-blue-700 no-underline"
               >
                 linkedin.com/in/ibnu-musyaffa
-              </ContactLink>
-            </div>
-          </section>
+              </a>
+            </li>
+
+            <li>
+              <strong>Email: </strong>
+              <a
+                href="mailto:ibnu.musyaffa@gmail.com"
+                className="text-blue-700 no-underline"
+              >
+                ibnu.musyaffa@gmail.com
+              </a>
+            </li>
+          </ul>
+
+          <p>Terima kasih sudah berkunjung!</p>
         </div>
       </div>
     </>

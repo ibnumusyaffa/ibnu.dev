@@ -15,9 +15,9 @@ export default function Layout({ children }: LayoutProps) {
               Ibnu.dev
             </Link>
             <div className="flex gap-6">
-              <Link href="/" className="">
+              {/* <Link href="/" className="">
                 Blog
-              </Link>
+              </Link> */}
 
               <Link href="/about" className="">
                 About
