@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -12,6 +12,7 @@
     "@giscus/react": "^3.1.0",
     "@heroicons/react": "^2.2.0",
     "@vercel/og": "^0.6.5",
+    "@vercel/speed-insights": "^1.2.0",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
     "github-slugger": "^2.0.0",

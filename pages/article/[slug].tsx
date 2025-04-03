@@ -38,7 +38,7 @@ export default function PostPage({ post }: { post: Post }) {
   return (
     <article className="mb-10">
       <Meta
-        title={post.title}
+        title={`${post.title} | Ibnu Musyaffa`}
         description={post.description}
         url={post.url}
         type="article"
