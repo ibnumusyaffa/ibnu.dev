@@ -11,6 +11,7 @@ import { GetStaticProps, GetStaticPaths } from "next";
 import dayjs from "dayjs";
 import Meta from "@/components/Meta";
 import Giscus from "@giscus/react";
+import clsx from "clsx";
 
 function Header({ post }: { post: Post }) {
   return (
@@ -19,7 +20,7 @@ function Header({ post }: { post: Post }) {
         <h1 className="text-3xl   font-semibold  capitalize">{post.title}</h1>
         <div className="flex gap-2 mt-5">
           <div className="text-gray-700">
-            {dayjs(post.published_at).format("D MMM YYYY")}
+            {dayjs(post.published_at).format("DD MMMM YYYY")}
           </div>
           <div className="text-gray-700">·</div>
           <div className="text-gray-700">{post.readingTime}</div>
@@ -29,11 +30,7 @@ function Header({ post }: { post: Post }) {
   );
 }
 
-interface PostPageProps {
-  post: (typeof allPosts)[0];
-}
-
-export default function PostPage({ post }: PostPageProps) {
+export default function PostPage({ post }: { post: Post }) {
   if (!post) {
     return <div>Post not found</div>;
   }
@@ -54,28 +51,37 @@ export default function PostPage({ post }: PostPageProps) {
         <div className=" bg-white border-2 border-black ">
           <Header post={post}></Header>
 
-          {post.thumbnail && post.show_thumbnail ? (
-            <div className="px-5 pt-5 md:p-10 relative">
-              <Image
-                src={"/" + post.thumbnail}
-                className="aspect-video object-cover"
-                height={450}
-                width={800}
-                alt={post.title}
-              />
+          <div className="px-5 pt-5 md:p-10">
+            {post.thumbnail && post.show_thumbnail ? (
+              <div className="relative mb-7">
+                <Image
+                  src={"/" + post.thumbnail}
+                  className="aspect-video object-cover"
+                  height={450}
+                  width={800}
+                  alt={post.title}
+                />
+              </div>
+            ) : null}
+
+            {post.show_toc ? (
+              <div className="md:hidden mb-7">
+                <TableOfContentMobile toc={post.toc}></TableOfContentMobile>
+              </div>
+            ) : null}
+
+            <div
+              className={clsx(
+                "prose prose-purple",
+                "prose-pre:-mx-5 md:prose-pre:mx-0 prose-pre:rounded-none max-w-full"
+              )}
+            >
+              <MDXContent code={post.mdx} />
             </div>
-          ) : null}
-          {post.show_toc ? (
-            <div className="p-5 md:p-0 md:hidden ">
-              <TableOfContentMobile toc={post.toc}></TableOfContentMobile>
-            </div>
-          ) : null}
-          <div className="prose prose-purple prose-pre:-mx-5 md:prose-pre:-mx-10 prose-pre:rounded-none max-w-full px-5 md:px-10 pb-5 md:pb-10">
-            <MDXContent code={post.mdx} />
           </div>
         </div>
         {post.show_toc ? (
-          <div className="sticky top-5 right-0 hidden md:block  max-h-screen ">
+          <div className="sticky top-5 right-0 hidden md:block  max-h-screen">
             <div className="pl-5 py-2 border-l border-gray-300 ml-5">
               <TableOfContent toc={post.toc}></TableOfContent>
             </div>
@@ -106,7 +112,7 @@ export default function PostPage({ post }: PostPageProps) {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const paths = allPosts.map((post) => ({
-    params: { slug: post._meta.path },
+    params: { slug: post.slug },
   }));
 
   return {
@@ -116,9 +122,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const post = allPosts.find(
-    (post) => post.slug === params?.slug && post.is_published
-  );
+  const post = allPosts.find((post) => post.slug === params?.slug);
 
   if (!post) {
     return {

@@ -1,0 +1,171 @@
+---
+published_at: 2025-04-03
+updated_at: 2025-04-03
+title: "Docker Best Practice"
+description: "Hal-hal yang perlu diperhatikan saat menggunakan Docker"
+thumbnail: ""
+show_thumbnail: false
+show_toc: true
+is_published: true
+---
+
+Docker saat ini adalah salah satu tools yang populer di kalangan developer dan menjadi industri standar untuk mendeploy aplikasi ke production, tetapi tidak semua paham menggunakan Docker dengan baik. kali ini saya akan membahas beberapa hal yang perlu diperhatikan saat menggunakan Docker.
+
+## 1. Gunakan Base Image yang tepat
+
+Langkah pertama yang perlu dilakukan adalah memilih base image yang tepat untuk project kita. ketika memilih base image pastikan ambil dari sumber yang terpercaya semisal maintainer resmi dari tools yang terkait atau yang sudah diterverikasi oleh Docker inc. begitu juga pastikan ukuranya sesuai tidak terlalu banyak built in tools atau library yang tidak perlu.
+
+```dockerfile
+# ❌ menggunakan image ubuntu dan install nodejs secara manual
+FROM ubuntu:22.04
+RUN apt-get update && apt-get install -y nodejs
+
+# ✅ menggunakan image node yang dimaintain oleh nodejs dan sudah diterverikasi oleh Docker
+FROM node:20-alpine
+
+```
+
+## 2. Gunakan versi image yang spesifik
+
+```dockerfile
+# ❌ menggunakan image node yang tidak spesifik
+FROM node:latest
+
+# ✅ menggunakan image node yang spesifik
+FROM node:20-alpine
+```
+
+Ketika kita memilih base image pastikan kita menggunakan versi yang lebih spesifik, kenapa ? 
+
+Sebagai contoh, jika kita mempunyai aplikasi nodejs yang berjalan dengan node.js versi 20 tetapi kita menggunakan tag latest `node:latest`, ketika kita rebuild ulang image, tidak ada jaminan bahwa base image yang didownload berisi node.js versi yang sama, ini kan menjadi masalah jika kode atau library yang ada tidak kompatibel dengan versi node yang baru.
+
+## 3. Gunakan multi stage build
+
+Beberapa aplikasi membutuhkan tools yang berbeda ketika proses build dan running, sebagai contoh aplikasi client side seperti React/Vue/Angular membutuhkan node dan npm untuk proses build saja, untuk menjalankan aplikasi tersebut kita hanya perlu menggunakan nginx yang akan men-serve file static dari proses build. dengan adanya multi stage build, size image akhir yang perlu dijalankan menjadi lebih kecil karena kita tidak perlu menyimpan node dan npm di dalam image.
+
+```dockerfile
+# Build stage
+FROM node:16 AS builder
+
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN npm run build
+
+# Production stage
+FROM nginx:alpine
+EXPOSE 80
+COPY --from=builder /app/build /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+```
+
+## 4. Manfaatkan build cache untuk mempercepat proses build
+
+Docker menggunakan sistem layer dalam membuild sebuah image, dimana setiap instruksi dalam Dockerfile akan membentuk layer baru. jika tidak ada perubahan pada sebuah layer dan layer sebelumnnya, docker akan menggunakan cache agar mempercepat proses build. Oleh karena itu, penting untuk menempatkan instruksi yang jarang berubah di bagian atas Dockerfile, dan instruksi yang sering berubah di bagian bawah.
+
+Sebagai contoh, dalam aplikasi Node.js, proses instalasi library dengan `npm install` hanya akan dijalankan ulang jika file `package*.json` berubah, selain itu setiap kali kita rebuild image, docker akan menggunakan cache.
+
+```dockerfile
+FROM node:14
+# Set working directory
+WORKDIR /app
+# Layer 1: Copy package files
+COPY package*.json ./
+# Layer 2: Install dependencies
+RUN npm install
+# Layer 3: Copy application code
+COPY . .
+# Layer 4: Build application
+RUN npm run build
+# Command to run the application
+CMD ["npm", "start"]
+```
+
+## 5. Gabungkan multiple instruksi menjadi satu
+
+Dalam membuat Dockerfile, setiap instruksi RUN akan menciptakan layer baru pada image. Semakin banyak layer yang dibuat, semakin kompleks manajemen cache-nya. Oleh karena itu, sangat penting untuk menggabungkan perintah yang berkaitan menjadi satu instruksi.
+
+```dockerfile
+# ❌ multiple instruksi
+RUN npm install
+RUN npm run build
+
+# ✅ single instruksi
+RUN npm install && npm run build
+```
+
+## 6. Kecualikan file yang tidak perlu dengan .dockerignore
+
+Ketika membuild sebuah image, seringkali masuk beberapa file yang sebenernya tidak dibutuhakan lagi. agar image menjadi lebih kecil, kita bisa membuat file `.dockerignore` untuk mengecualikan file yang tidak perlu di masukan ke dalam image.
+
+beberapa contoh file/folder yang biasa di exclude didalam project adalah:
+
+```bash
+# Dependencies 
+node_modules 
+npm-debug.log 
+yarn-debug.log 
+yarn-error.log 
+
+# Git History
+.git 
+
+# Environment
+.env 
+.env.local 
+.env.*.local 
+
+# Testing 
+coverage 
+tests 
+__tests__ 
+*.test.js 
+
+# Development 
+.vscode 
+.idea 
+*.swp 
+*.swo 
+
+# Logs 
+logs 
+*.log 
+
+# Build output 
+dist 
+build
+```
+
+## 7. Hindari menggunakan root user
+
+Menjalankan container sebagai root user bisa menambah resiko keamanan. Jika ada kerentanan pada aplikasi, peretas bisa saja mendapatkan akses root ke host system. Untuk itu sebaiknya kita membuat user non-root khusus untuk menjalankan aplikasi di dalam container.
+
+```dockerfile
+FROM node:18-alpine
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+RUN npm install
+
+COPY . .
+
+# Ubah ownership directory ke user 'node' yang sudah built in dari base image
+RUN chown -R node:node /usr/src/app
+
+EXPOSE 3000
+
+# Ganti user dari root ke user 'node'
+USER node
+
+CMD [ "node", "server.js" ]
+``` 
+
+## Kesimpulan
+
+Dari beberapa penjelasan diatas, kita bisa melihat bahwa ada beberapa hal yang perlu diperhatikan saat menggunakan Docker dari sisi base image, build efisiensi, dan keamanan. Dari penjelasan semoga kita bisa mengaplikasikan hal diatas untuk membuat image pekerjaan kita lebih berkualitas.
+
+
+

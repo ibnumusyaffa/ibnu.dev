@@ -31,9 +31,20 @@ const posts = defineCollection({
     });
 
     const slugger = new GithubSlugger();
+    let inCodeBlock = false;
     const toc = post.content
       .split("\n")
-      .filter((line) => line.match(/^#{1,3}\s/)) 
+      .filter((line) => {
+        // Toggle code block state
+        if (line.trim().startsWith("```")) {
+          inCodeBlock = !inCodeBlock;
+          return false;
+        }
+        // Skip if inside code block
+        if (inCodeBlock) return false;
+        // Check for heading pattern
+        return line.match(/^#{1,3}\s/);
+      })
       .map((line) => {
         const [level, title] = line.split(/(?<=#)\s/); 
         return {

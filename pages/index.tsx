@@ -28,13 +28,13 @@ export default function Home({ posts }: HomeProps) {
           <div className="w-12 h-1 bg-gray-900"></div>
         </div>
 
-        <div className="space-y-5 p-10">
+        <div className="space-y-3 p-10">
           {posts.map((post) => (
-            <Link key={post.url} href={post.url} className="group block">
+            <Link key={post.url} href={post.url} className="group block ">
               <article className="relative">
                 <div className="flex items-start gap-4">
                   <div className="flex-1">
-                    <h2 className="text-lg md:text-xl text-gray-950 hover:underline">
+                    <h2 className="text-lg  text-gray-950 hover:underline">
                       {post.title}
                     </h2>
                     <div className="mt-2 flex items-center gap-3 text-sm text-gray-500">
@@ -42,7 +42,7 @@ export default function Home({ posts }: HomeProps) {
                         dateTime={post.published_at}
                         className="text-sm text-gray-500"
                       >
-                        {dayjs(post.published_at).format("D MMM YYYY")}
+                        {dayjs(post.published_at).format("DD MMMM YYYY")}
                       </time>
                     </div>
                   </div>
