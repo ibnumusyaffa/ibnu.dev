@@ -1,24 +1,104 @@
 ---
-published_at: 2023-08-23
-updated_at: 2023-08-23
+published_at: 2025-04-05
+updated_at: 2025-04-05
 title: "Menggunakan Tanstack Query dengan React Context"
 description: ""
-thumbnail: blog/go-gopher.png
+thumbnail: ""
 show_thumbnail: true
 show_toc: true
-is_published: false
+is_published: true
 ---
 
+Sebagai contoh, kita memiliki sebuah custom hook bernama `useCurrentUserQuery` yang berfungsi untuk mengambil data user yang sedang login menggunakan Tanstack Query
 
-``` typescript
-import React from "react";
+```typescript
+function useCurrentUserQuery() {
+  return useQuery({
+    queryKey: ["user"],
+    queryFn: () => fetchCurrentUser(),
+  });
+}
+```
 
+Seperti biasa, kita bisa menggunakan custom hook tersebut dengan cara seperti berikut.
+
+```typescript
+function UserNameDisplay() {
+  const query = useCurrentUserQuery();
+
+  if (query.isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (query.isError) {
+    return <div>Error: {query.error}</div>;
+  }
+
+  return <div>User: {query.data.username}</div>;
+}
+```
+
+Umumnya ini bukan masalah, tetapi untuk data-data yang bersifat global seperti data `user`, ini kurang optimal. karena setiap kali kita mengaksesnya, kita perlu melakukan pengecekan terhadap `isPending` dan `isError` untuk memastikan data tersebut tersedia.
+
+Adakah cara yang lebih baik ? dikasus ini kita bisa menyederhanakannya dengan menggunakan React Context.
+
+## Membuat Context dan Provider
+
+Pertama, kita buat sebuah context bernama CurrentUserContext dan provider-nya. Provider ini akan mengambil data initial dengan `useCurrentUserQuery` dan menyimpannya ke dalam context.
+
+```tsx
 type User = {
   username: string;
 };
 
+// Membuat context
 const CurrentUserContext = React.createContext<User | null>(null);
 
+// Membuat provider
+export const CurrentUserContextProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const query = useCurrentUserQuery();
+
+  if (query.isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (query.isError) {
+    return <div>Error: {query.error}</div>;
+  }
+
+  return (
+    // pass initial data ke dalam context
+    <CurrentUserContext.Provider value={query.data}>
+      {children}
+    </CurrentUserContext.Provider>
+  );
+};
+```
+
+## Memasang Provider di Root Component
+
+Setelah membuat provider, kita perlu memasangnya di root component agar data dari provider tersebut bisa diakses disemua component tree.
+
+```tsx
+// contoh root component di next.js
+export default function App({ Component, pageProps }: AppProps) {
+  return (
+    <CurrentUserContextProvider>
+      <Component {...pageProps} />
+    </CurrentUserContextProvider>
+  );
+}
+```
+
+## Membuat Hook untuk Mengakses Data User
+
+Setelah provider terpasang, kita bisa membuat sebuah hook untuk mengakses data user yang sedang login dari context yang telah kita buat sebelumnya.
+
+```tsx
 export const useCurrentUserContext = () => {
   const currentUser = React.useContext(CurrentUserContext);
   if (!currentUser) {
@@ -27,41 +107,25 @@ export const useCurrentUserContext = () => {
 
   return currentUser;
 };
+```
 
-function useCurrentUserQuery() {
-  return useQuery({
-    queryKey: ["user"],
-    queryFn: () => fetchCurrentUser(),
-  });
-}
+## Mengakses Data User dari Component
 
-export const CurrentUserContextProvider = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
-  const currentUserQuery = useCurrentUserQuery();
+Setelah provider terpasang, kita dapat mengambil data user yang sedang login tanpa perlu memeriksa status isPending dan isError setiap kali data digunakan. Berikut adalah contoh penggunaannya:
 
-  if (currentUserQuery.isPending) {
-    return <div>Loading...</div>;
-  }
-
-  if (currentUserQuery.isError) {
-    return <div>Error: {currentUserQuery.error}</div>;
-  }
-
-  return (
-    <CurrentUserContext.Provider value={currentUserQuery.data}>
-      {children}
-    </CurrentUserContext.Provider>
-  );
-};
-
+```tsx
 function UserNameDisplay() {
   const data = useCurrentUserContext();
   return <div>User: {data.username}</div>;
 }
 ```
 
+## State Syncing ?
 
+Untuk yang sudah berpengalaman dengan Tanstack Query, mungkin ini terlihat seperti "state syncing" dimana hal ini kurang direkomendasikan karena berpotensi "out of sync" antara data yang ada di context dan data yang ada di Tanstack Query.
 
+Tetapi contoh diatas bukan state syncing, karena source of truth tetap dari Tanstack Query dan context hanya sebagai "distributor" datanya saja.
+
+## Kesimpulan
+
+Dengan menggunakan React Context kita bisa menyederhanakan beberapa kasus dengan mudah dan tanpa library tambahan.
