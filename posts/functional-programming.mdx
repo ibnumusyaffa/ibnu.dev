@@ -1,21 +1,23 @@
 ---
-published_at: 2022-05-29
-updated_at: 2022-05-29
-title: "functional programming dengan javascript"
+published_at: 2025-04-04
+updated_at: 2025-04-04
+title: "Functional programming dengan javascript"
 description: ""
 thumbnail: ""
 show_thumbnail: false
 show_toc: false
-is_published: false
+is_published: true
 ---
 
-Javascript pada dasarnya adalah bahasa multi paradigma, meskipun bukan bahasa functional murni layaknya elixir, haskel ataupun clojure, tetapi banyak konsep-konsep functional pada javascript yang sering digunakan developer baik sadar maupun tidak sadar, apalagi dengan semakin populernya React, dimana fondasi utamanya diambil dari paradigma functional. jadi mari kita bahas konsep-konsep functional dengan javascript.
+Javascript pada dasarnya adalah bahasa multi paradigma, meskipun bukan bahasa functional murni layaknya elixir, haskel ataupun clojure, tetapi banyak konsep-konsep functional pada javascript yang sering digunakan developer baik sadar maupun tidak sadar.
 
-Functional programming adalah sebuah paradigma pemprograman atau cara berpikir dalam membangun sebuah software dengan function sebagai building block dasar dan tentunya dengan beberapa konsep umum yang akan kita bahas dibawah.
+Apa itu functional programming?
+
+Functional programming adalah sebuah paradigma pemprograman atau cara berpikir dalam membangun sebuah software dengan function sebagai building block dasar. Berikut beberapa konsep dasar yang ada pada functional programming yang perlu kita ketahui.
 
 ## 1. First Class Function
 
-Sebuah bahasa pemrograman dikatakan mempunyai konsep **first class function** ketika bahasa tersebut menyikapi sebuah function layaknya variabel pada umumnya, artinya kita dapat menggunakan function sebagai paramater, return value, dan meng-assign nya sebagai value ke sebuah variabel. perhatikan contoh contoh berikut
+Sebuah bahasa pemrograman dikatakan mempunyai konsep **first class function** ketika bahasa tersebut mensifati sebuah function layaknya variabel pada umumnya, artinya kita dapat menggunakan function sebagai paramater, return value, dan meng-assign nya sebagai value ke sebuah variabel. perhatikan contoh contoh berikut
 
 menggunakan function sebagai paramater sebuah function
 
@@ -25,9 +27,9 @@ function runThisFunction(fun1, fun2) {
   fun2();
 }
 
-function sayHello() {
+const sayHello = function () {
   console.log("Hello");
-}
+};
 function sayWorld() {
   console.log("World");
 }
@@ -37,82 +39,221 @@ runThisFunction(sayHello, sayWorld);
 //output: World
 ```
 
-mengembalikan atau mereturn function dari sebuah function dan mengassignnya ke sebuah variabel
-
-```javascript
-function createAdder(value1) {
-  return function (value2) {
-    return value1 + value2;
-  };
-}
-
-let addFive = createAdder(5);
-console.log(addFive(10)); //output: 15
-
-let addTwo = createAdder(2);
-console.log(addTwo(10)); //output: 12
-```
-
 ## 2. Pure function
 
 Sebuah function dikatakan Pure jika memenuhi 2 kondisi, diantaranya
 
 1. Predictable, Jika diberikan input yang sama, akan selalu memberikan output yang sama.
-2. Tidak mempunyai side effect seperti akses network/api, file system. hasil outputnya hanya bergantung dari input.
+2. Tidak mempunyai side effect seperti akses network, file system, ataupun mengubah variable diluar scope function tersebut. hasil outputnya hanya bergantung dari input.
 
 ```javascript
-//✅ pure function, predictable dan tidak mempunya side effect
+//✅ pure function
+// predictable dan tidak mempunya side effect
 function add(number1, number2) {
   return number1 + number2;
 }
 
-// 🔴 bukan pure function, karena hasil dari function substract bisa
-// berubah meskipun diberikan input yang sama, hal ini karena function
-// tersebut  bergantung ke value diluar scope nya yang bisa saja berubah sewaktu-waktu (side effect)
+// 🔴 bukan pure function, 
+// karena bergantung ke value diluar scope nya yang bisa saja berubah
 let outerNumber = 2;
 function subtract(number1) {
   return number1 + outerNumber;
 }
 ```
-
+Contoh lainnya dengan tipe data object
 
 ```javascript
-let data1 = {
+
+let john = {
   name:"John Wheeler"
-  value: 1,
+  age: 25,
 };
 // ✅ pure function
-function doSomething1(obj) {
-  let newObj = { ...obj, value: obj.value + 1 };
-  return newObj;
+//function ini tidak merubah object diluar scope nya
+function increaseAgePure(person) {
+  let newPerson = { ...person, age: person.age + 1 };
+  return newPerson;
 }
-//function ini akan mereturn object baru daripada mengubah object existing
-let newData1 = doSomething1(data1);
-//object baru dengan value yang sudah terupdate
-console.log(newData1.value); //✅ output: 2
 
-//object existing tidak berubah atau tidak termutasi
-console.log(data1.value); //✅ output: 1
+let updatedJohn = increaseAgePure(john);
+console.log(updatedJohn.age); //✅ output: 26
+console.log(john.age); //✅ output: 25
 
-//------------------------------------------------------
 
-let data2 = {
-  name:"John Doe"
-  value: 1,
+let jack = {
+  name:"Jack"
+  age: 20,
 };
-// 🔴 bukan pure function, 
-// function doSomething2, merubah object dari paramater dan terekspor keluar perubahanya
-function doSomething2(obj) {
-  obj.value = obj.value + 1;
-}
 
-doSomething2(data2);
-console.log(data2.value); // 🔴 output: 2
+// 🔴 bukan pure function,
+// function ini merubah object diluar scope nya
+function increaseAge(person) {
+  person.age = person.age + 1;
+  return person;
+} 
+
+let updatedJack = increaseAge(jack);
+console.log(updatedJack.age); // ✅ output: 21
+console.log(jack.age); // 🔴 output: 21
 
 ```
-jadi apa manfaatnya menggunakan pure function ?
 
-- Pure function sangat mudah ditest terutama menggunakan unit test.
-- Karena hanya bergantung kepada input dan tidak mempunyai side effect, maka pure function ini mudah dipahami.
+Apa manfaatnya menggunakan pure function ?
+
+- Testability : Pure function sangat mudah ditest terutama menggunakan unit test.
+- Readability : Karena hanya bergantung kepada input dan tidak mempunyai side effect, maka pure function ini mudah dipahami.
+- Predictability : Karena pure function hanya bergantung kepada input dan tidak bergantun ke luar scope, function tersebut menjadi lebih predictable
 
 ## 3. Immutability
+
+Konsep Immutability sangat erat kaitannya dengan pure function dan side effect. Immutability berarti bahwa sebuah data (terutama object dan array dalam JavaScript) tidak boleh diubah setelah dibuat. Alih-alih mengubah data asli, kita membuat data baru dengan perubahan yang diinginkan.
+
+Tipe data primitif di JavaScript (String, Number, Boolean, Null, Undefined, Symbol, BigInt) secara alami sudah immutable. Fokus utama immutability dalam konteks FP di JavaScript adalah pada Object dan Array.
+
+Perhatikan contoh berikut
+
+```javascript
+// 🔴 Mutable approach (tidak immutable)
+const person1 = {
+  name: "John",
+  age: 30,
+  hobbies: ["reading", "coding"],
+};
+
+// Mengubah object secara langsung
+person1.age = 31; // 🔴 mutable
+person1.hobbies.push("gaming"); // 🔴 mutable
+
+console.log(person1);
+// Output: { name: "John", age: 31, hobbies: ["reading", "coding", "gaming"] }
+
+// ✅ Immutable approach
+const person2 = {
+  name: "John",
+  age: 30,
+  hobbies: ["reading", "coding"],
+};
+
+// Membuat object baru dengan spread operator
+const updatedPerson2 = {
+  ...person2,
+  age: 31,
+  hobbies: [...person2.hobbies, "gaming"],
+};
+
+console.log(person2);
+// Output: { name: "John", age: 30, hobbies: ["reading", "coding"] }
+
+console.log(updatedPerson2);
+// Output: { name: "John", age: 31, hobbies: ["reading", "coding", "gaming"] }
+```
+
+Apa manfaatnya memahami konsep immutability?
+
+Dengan memahami konsep immutability, kita bisa menghindari side effect sehingga kode kita menjadi lebih predictable dan mudah di debug. hal ini berkaitan dengan implementasi konsep pure function.
+
+Perhatikan contoh berikut
+
+```javascript
+// 🔴 Contoh masalah dengan mutasi
+const user = {
+  name: "Alice",
+  settings: {
+    notifications: true,
+  },
+};
+
+function toggleNotifications(userObj) {
+  // Mengubah object langsung (mutasi)
+  userObj.settings.notifications = !userObj.settings.notifications;
+  return userObj;
+}
+
+
+const updatedUser = toggleNotifications(user);
+
+console.log("User asli setelah fungsi dipanggil:", user.settings.notifications); // false
+console.log("Updated user:", updatedUser.settings.notifications); // false
+
+// 😱 Object asli (user) ikut berubah!
+// Ini bisa menyebabkan bug yang sulit dilacak
+
+// ✅ Solusi dengan immutability
+const user2 = {
+  name: "Alice",
+  settings: {
+    notifications: true,
+  },
+};
+
+function toggleNotificationsImmutable(userObj) {
+  // Membuat object baru dengan spread operator
+  return {
+    ...userObj,
+    settings: {
+      ...userObj.settings,
+      notifications: !userObj.settings.notifications,
+    },
+  };
+}
+
+const updatedUser2 = toggleNotificationsImmutable(user2);
+
+console.log("User asli tetap sama:", user2.settings.notifications); // true
+console.log("Updated user:", updatedUser2.settings.notifications); // false
+
+```
+
+## 4. Higher Order Function
+
+Konsep ini adalah konsekuensi langsung dari adanya First-Class Functions. Higher-Order Function (HOF) adalah function yang
+
+1. Menerima function lain sebagai argumen, DAN/ATAU
+2. Mengembalikan function sebagai hasil (return value).
+
+Kita sudah melihat contoh HOF pada bagian First-Class Function (runThisFunction menerima function, createAdder mengembalikan function). Berikut contoh lainnya.
+
+```javascript
+
+function mapArray(arr, transformFn) {
+  const newArray = []; 
+  for (const item of arr) {
+    newArray.push(transformFn(item));
+  }
+  return newArray; 
+}
+
+
+const numbers = [1, 2, 3];
+
+function double(x) {
+  return x * 2;
+}
+
+function triple(x) {
+  return x * 3;
+}
+
+// Gunakan HOF mapArray dengan fungsi 'double'
+const doubledNumbers = mapArray(numbers, double);
+console.log(doubledNumbers); // Output: [ 2, 4, 6]
+
+const tripledNumbers = mapArray(numbers, triple);
+console.log(tripledNumbers); // Output: [ 3, 6, 9]
+
+```
+Dari kode diatas kita bisa melihat, dari sebuah function yaitu mapArray, kita bisa dengan mudah mengkombinasikan dengan function lainnya seperti double dan triple untuk menghasilkan operasi kustom yang lain sesuai kebutuhan.
+
+
+## Kesimpulan
+
+Meskipun JavaScript bukan bahasa functional murni, javascript memiliki fitur dasar yang mendukung paradigma functional programming. Memahami dan menerapkan konsep seperti:
+
+- First-Class Functions: Memperlakukan fungsi sebagai nilai.
+- Pure Functions: Fungsi yang predictable dan tanpa side effect.
+- Immutability: Tidak mengubah data, melainkan membuat data baru.
+- Higher-Order Functions: Fungsi yang beroperasi pada fungsi lain.
+
+dapat membantu kita menulis kode yang lebih modular, predictable, testable, reusable, dan mudah dipahami. 
+
+Ini hanyalah pengantar dasar. Masih banyak konsep FP lain yang bisa dieksplorasi lebih dalam seperti Currying, Composition, Functors, dan Monads. Tetapi dengan hanya memahami konsep dasar ini, kita sudah bisa menerapkan gaya pemrograman yang lebih functional dalam project javascript kita.
