@@ -1,0 +1,67 @@
+---
+published_at: 2023-08-23
+updated_at: 2023-08-23
+title: "Menggunakan Tanstack Query dengan React Context"
+description: ""
+thumbnail: blog/go-gopher.png
+show_thumbnail: true
+show_toc: true
+is_published: false
+---
+
+
+``` typescript
+import React from "react";
+
+type User = {
+  username: string;
+};
+
+const CurrentUserContext = React.createContext<User | null>(null);
+
+export const useCurrentUserContext = () => {
+  const currentUser = React.useContext(CurrentUserContext);
+  if (!currentUser) {
+    throw new Error("CurrentUserContext: No value provided");
+  }
+
+  return currentUser;
+};
+
+function useCurrentUserQuery() {
+  return useQuery({
+    queryKey: ["user"],
+    queryFn: () => fetchCurrentUser(),
+  });
+}
+
+export const CurrentUserContextProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const currentUserQuery = useCurrentUserQuery();
+
+  if (currentUserQuery.isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (currentUserQuery.isError) {
+    return <div>Error: {currentUserQuery.error}</div>;
+  }
+
+  return (
+    <CurrentUserContext.Provider value={currentUserQuery.data}>
+      {children}
+    </CurrentUserContext.Provider>
+  );
+};
+
+function UserNameDisplay() {
+  const data = useCurrentUserContext();
+  return <div>User: {data.username}</div>;
+}
+```
+
+
+
