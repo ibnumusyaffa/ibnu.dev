@@ -1,26 +1,42 @@
-import { allPosts } from "content-collections";
+import { allPosts, Post } from "content-collections";
 import Link from "next/link";
 import React from "react";
 import { GetStaticProps } from "next";
 import dayjs from "dayjs";
 import Meta from "@/components/Meta";
 
-interface HomeProps {
-  posts: typeof allPosts;
+function ArticleLink({ post }: { post: Post }) {
+  return (
+    <Link key={post.url} href={post.url} className="group block ">
+      <article className="relative">
+        <div className="flex items-start gap-4">
+          <div className="flex-1">
+            <h2 className="text-lg  text-gray-950 hover:underline">
+              {post.title}
+            </h2>
+            <div className="mt-2 flex items-center gap-3 text-sm text-gray-500">
+              <time
+                dateTime={post.published_at}
+                className="text-sm text-gray-500"
+              >
+                {dayjs(post.published_at).format("DD MMMM YYYY")}
+              </time>
+            </div>
+          </div>
+        </div>
+      </article>
+    </Link>
+  );
 }
 
-export default function Home({ posts }: HomeProps) {
+export default function Home({ posts }: { posts: Array<Post> }) {
   return (
     <div>
       <Meta
         title="Blog | Ibnu Musyaffa"
         description="Tulisan seputar pengembangan perangkat lunak dan teknologi lainnya"
-        url="https://ibnu.dev"
+        url={process.env.NEXT_PUBLIC_URL || ""}
       ></Meta>
-
-      {/* <div className="md:w-[50%] mx-auto  border-2 border-black p-5 bg-purple-300">
-        <div className="text-lg font-medium">Ditulis oleh Ibnu Musyaffa</div>
-      </div> */}
 
       <div className="md:w-[50%] mx-auto bg-white  border-2 border-black">
         <div className=" px-10 py-5 border-b-2  border-black bg-sky-300">
@@ -30,25 +46,7 @@ export default function Home({ posts }: HomeProps) {
 
         <div className="space-y-3 p-10">
           {posts.map((post) => (
-            <Link key={post.url} href={post.url} className="group block ">
-              <article className="relative">
-                <div className="flex items-start gap-4">
-                  <div className="flex-1">
-                    <h2 className="text-lg  text-gray-950 hover:underline">
-                      {post.title}
-                    </h2>
-                    <div className="mt-2 flex items-center gap-3 text-sm text-gray-500">
-                      <time
-                        dateTime={post.published_at}
-                        className="text-sm text-gray-500"
-                      >
-                        {dayjs(post.published_at).format("DD MMMM YYYY")}
-                      </time>
-                    </div>
-                  </div>
-                </div>
-              </article>
-            </Link>
+            <ArticleLink key={post.url} post={post} />
           ))}
         </div>
       </div>

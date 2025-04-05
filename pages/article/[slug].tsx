@@ -17,13 +17,11 @@ function Header({ post }: { post: Post }) {
   return (
     <div className="border-b-2 border-black">
       <header className="flex flex-col bg-green-300 px-10 py-10">
-        <h1 className="text-3xl   font-semibold  capitalize">{post.title}</h1>
-        <div className="flex gap-2 mt-5">
-          <div className="text-gray-700">
-            {dayjs(post.published_at).format("DD MMMM YYYY")}
-          </div>
-          <div className="text-gray-700">·</div>
-          <div className="text-gray-700">{post.readingTime}</div>
+        <h1 className="text-3xl font-semibold capitalize">{post.title}</h1>
+        <div className="flex gap-2 mt-5 text-gray-700">
+          <div>{dayjs(post.published_at).format("DD MMMM YYYY")}</div>
+          <div>·</div>
+          <div>{post.readingTime}</div>
         </div>
       </header>
     </div>
@@ -36,8 +34,7 @@ export default function PostPage({ post }: { post: Post }) {
   }
 
   return (
-    <article className="mb-10">
-      {/* <pre>{JSON.stringify(post,null,2)}</pre> */}
+    <article className="space-y-7">
       <Meta
         title={post.title}
         description={post.description}
@@ -45,16 +42,19 @@ export default function PostPage({ post }: { post: Post }) {
         type="article"
         publishDate={post.published_at}
         modifiedDate={post.updated_at}
-      ></Meta>
+      />
 
-      <div className="relative md:grid md:grid-cols-[1fr_50%_1fr]  min-h-screen ">
-        <div className=""></div>
-        <div className=" bg-white border-2 border-black ">
-          <Header post={post}></Header>
+      <div className="relative min-h-screen md:grid md:grid-cols-[1fr_50%_1fr]">
+        {/* Left spacer */}
+        <div />
 
-          <div className="px-5 pt-5 md:p-10">
+        {/* Main content */}
+        <div className="bg-white border-2 border-black">
+          <Header post={post} />
+
+          <div className="px-5 pt-6 space-y-7 md:p-10">
             {post.thumbnail && post.show_thumbnail ? (
-              <div className="relative mb-7">
+              <div className="relative">
                 <Image
                   src={"/" + post.thumbnail}
                   className="aspect-video object-cover"
@@ -65,32 +65,36 @@ export default function PostPage({ post }: { post: Post }) {
               </div>
             ) : null}
 
-            {post.show_toc ? (
-              <div className="md:hidden mb-7">
-                <TableOfContentMobile toc={post.toc}></TableOfContentMobile>
+            {post.show_toc && (
+              <div className="md:hidden">
+                <TableOfContentMobile toc={post.toc} />
               </div>
-            ) : null}
+            )}
 
             <div
               className={clsx(
-                "prose prose-purple",
-                "prose-pre:-mx-5 md:prose-pre:mx-0 prose-pre:rounded-none max-w-full"
+                "prose prose-purple max-w-full",
+                "prose-pre:-mx-5 md:prose-pre:mx-0 prose-pre:rounded-none"
               )}
             >
               <MDXContent code={post.mdx} />
             </div>
           </div>
         </div>
-        {post.show_toc ? (
-          <div className="sticky top-5 right-0 hidden md:block  max-h-screen">
-            <div className="pl-5 py-2 border-l border-gray-300 ml-5">
-              <TableOfContent toc={post.toc}></TableOfContent>
+
+        {/* Table of contents */}
+        {post.show_toc && (
+          <div className="sticky top-5 right-0 hidden max-h-screen md:block">
+            <div className="ml-5 border-l border-gray-300 py-2 pl-5">
+              <TableOfContent toc={post.toc} />
             </div>
           </div>
-        ) : null}
+        )}
       </div>
-      <div className="flex justify-center mt-10">
-        <div className="md:w-[50%] w-full bg-white border-2 border-black p-10">
+
+      {/* Comments section */}
+      <div className="flex justify-center">
+        <div className="w-full bg-white border-2 border-black p-10 md:w-[50%]">
           <Giscus
             repo="ibnumusyaffa/ibnu.dev"
             repoId="R_kgDOOSvFvA"
@@ -104,7 +108,7 @@ export default function PostPage({ post }: { post: Post }) {
             theme="preferred_color_scheme"
             lang="id"
             loading="lazy"
-          ></Giscus>
+          />
         </div>
       </div>
     </article>
@@ -131,7 +135,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     };
   }
 
-  post.content = ""
+  // remove content to reduce bundle size
+  post.content = "";
 
   return {
     props: {
