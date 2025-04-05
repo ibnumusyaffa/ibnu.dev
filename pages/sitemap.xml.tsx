@@ -1,7 +1,7 @@
 import { GetServerSideProps } from "next";
-import { allPosts, Post } from "content-collections";
+import { allPosts } from "content-collections";
 
-function generateSiteMap(posts: Post[]) {
+function generateSiteMap(posts: { url: string; updated_at: string; published_at: string }[]) {
   return `<?xml version="1.0" encoding="UTF-8"?>
    <urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
      <!-- Add the static URLs manually -->
@@ -29,6 +29,15 @@ function generateSiteMap(posts: Post[]) {
 export const getServerSideProps: GetServerSideProps = async ({ res }) => {
   const posts = allPosts
     .filter((post) => post.is_published)
+    .map((post) => {
+      post.content = "";
+      post.mdx = "";
+      return {
+        url: post.url,
+        updated_at: post.updated_at,
+        published_at: post.published_at,
+      };
+    })
     .sort(
       (a, b) =>
         new Date(b.published_at).getTime() - new Date(a.published_at).getTime()

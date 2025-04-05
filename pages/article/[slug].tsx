@@ -37,8 +37,9 @@ export default function PostPage({ post }: { post: Post }) {
 
   return (
     <article className="mb-10">
+      {/* <pre>{JSON.stringify(post,null,2)}</pre> */}
       <Meta
-        title={`${post.title} | Ibnu Musyaffa`}
+        title={post.title}
         description={post.description}
         url={post.url}
         type="article"
@@ -129,6 +130,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       notFound: true,
     };
   }
+
+  post.content = ""
 
   return {
     props: {
