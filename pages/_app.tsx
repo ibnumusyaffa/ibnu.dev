@@ -4,6 +4,7 @@ import "@/styles/globals.css";
 
 import { JetBrains_Mono, Inter } from "next/font/google";
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import { Analytics } from '@vercel/analytics/next';
 
 export const inter = Inter({
   subsets: ["latin"],
@@ -25,6 +26,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <Layout>
         <Component {...pageProps} />
         <SpeedInsights />
+        <Analytics />
       </Layout>
     </main>
   );
