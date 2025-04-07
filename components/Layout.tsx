@@ -26,7 +26,7 @@ export default function Layout({ children }: LayoutProps) {
           </div>
         </div>
       </nav>
-      <main className="px-5 py-5 md:px-0 md:py-8">{children}</main>
+      <main className="px-2 py-2 md:px-0 md:py-8">{children}</main>
     </div>
   );
 }
