@@ -52,7 +52,7 @@ export default function PostPage({ post }: { post: Post }) {
         <div className="bg-white border-2 border-black">
           <Header post={post} />
 
-          <div className="px-5 pt-6 space-y-7 md:p-10">
+          <div className="px-5 pt-5 pb-5 space-y-7 md:p-10">
             {post.thumbnail && post.show_thumbnail ? (
               <div className="relative">
                 <Image

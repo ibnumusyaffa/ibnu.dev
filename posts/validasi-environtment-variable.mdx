@@ -1,7 +1,7 @@
 ---
-published_at: 2025-04-07
-updated_at: 2025-04-07
-title: "Validasi Environment Variable dengan Zod"
+published_at: 2025-04-08
+updated_at: 2025-04-08
+title: "Type Safety dan Validasi Environment Variable dengan Zod"
 description: ""
 thumbnail: ""
 show_thumbnail: true
@@ -9,12 +9,12 @@ show_toc: false
 is_published: true
 ---
 
-Dari pengalaman, hal yang sering terlupakan ketika melakukan deployment adalah kita lupa menambahkan environtment variable baru, karena tidak ada validasi pada saat startup aplikasi, masalah ini baru terdeteksi ketika fitur terkait digunakan oleh user, menyebabkan error runtime dan potensi crash aplikasi.
+Hal yang sering terlupakan ketika melakukan deployment adalah kita lupa menambahkan environtment variable baru, karena tidak ada validasi pada saat startup aplikasi, masalah ini baru terdeteksi ketika fitur terkait digunakan oleh user, menyebabkan error saat runtime.
 
 ```bash
 process.env.MY_NEW_VARIABLE is not defined
 ```
-Untuk menghindari hal ini kita bisa menggunakan prinspip `fail fast` dimana aplikasi tidak dapat berjalan sampai environment variable yang dibutuhkan terisi. Dengan begitu, kita dapat memperbaiki error sesegera mungkin, tanpa aplikasi diakses user atau bahkan sebelum deployment selesai sepenuhnya.
+Untuk menghindari hal ini kita bisa menggunakan prinspip `fail fast` dimana aplikasi tidak dapat berjalan sampai environment variable yang dibutuhkan terisi. Dengan begitu, kita dapat memperbaiki error sesegera mungkin, tanpa user mengalami error saat menggunakan fitur terkait.
 
 Di sini kita bisa memanfaatkan  library `znv` dan `zod` untuk memvalidasi environment variable yang kita gunakan.
 
@@ -33,11 +33,12 @@ export const env = parseEnv(process.env, {
   DATABASE_URL: z.string(),
 });
 
-console.log(env);
+console.log(env.NODE_ENV);
+console.log(env.DATABASE_URL);
 
 ```
 
-Ketika kita melakukan re-deploy, dan melupakan environment variable yang dibutuhkan, maka process nodejs akan berhenti dan menampilkan error seperti berikut
+Ketika kita melakukan deployment ulang, dan melupakan environment variable yang dibutuhkan, maka process nodejs akan berhenti dan menampilkan error seperti berikut
 
 ```console
 Error: Errors found while parsing environment:
@@ -46,7 +47,7 @@ Error: Errors found while parsing environment:
     (received undefined)
 ```
 
-Selain validasi, kita juga mendapatkan type safety dari zod, hal ini membantu karena kita akan mendapatkan autocomplete ketika menggunakan environment variable.
+Selain validasi, kita juga mendapatkan type safety dari zod yang akan memberikan autocomplete ketika menggunakan environment variable.
 
 ```ts
 const env: DeepReadonlyObject<{
