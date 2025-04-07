@@ -17,7 +17,7 @@ function Header({ post }: { post: Post }) {
   return (
     <div className="border-b-2 border-black">
       <header className="flex flex-col bg-green-300 px-10 py-10">
-        <h1 className="text-3xl font-semibold capitalize">{post.title}</h1>
+        <h1 className="text-3xl font-semibold">{post.title}</h1>
         <div className="flex gap-2 mt-5 text-gray-700">
           <div>{dayjs(post.published_at).format("DD MMMM YYYY")}</div>
           <div>·</div>
@@ -56,7 +56,7 @@ export default function PostPage({ post }: { post: Post }) {
             {post.thumbnail && post.show_thumbnail ? (
               <div className="relative">
                 <Image
-                  src={"/" + post.thumbnail}
+                  src={post.thumbnail.startsWith("http") ? post.thumbnail : `/${post.thumbnail}`}
                   className="aspect-video object-cover"
                   height={450}
                   width={800}

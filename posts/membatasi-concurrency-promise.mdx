@@ -1,0 +1,59 @@
+---
+published_at: 2025-04-07
+updated_at: 2025-04-07
+title: "Membatasi Concurrency Promise dengan p-limit di JavaScript"
+description: ""
+thumbnail: ""
+show_thumbnail: false
+show_toc: false
+is_published: true
+---
+
+Saat mempunyai asyncrhonous task yang tidak saling bergantung, kita bisa menggunakan `Promise.all` untuk mengeksekusi semua task tersebut secara concurrent.
+
+Sebagai contoh kita mempunyai list URL yang ingin diproses dengan `fetch` dan kita gunakan `Promise.all` untuk mengeksekusi semua URL tersebut secara concurrent.
+
+```typescript
+const urls = [
+  "https://example.com/api/data1",
+  "https://example.com/api/data2",
+  // URL lainnya
+];
+
+//fetch semua url secara concurrent
+const responses = await Promise.all(urls.map((url) => fetch(url)));
+```
+
+Hal ini tidak menjadi masalah jika list URL tersebut sedikit, tapi bagaimana jadinya jika ada 10.000 list URL dan kita ingin membatasi jumlah concurrency yang dijalankan secara bersamaan misal menjadi 1000 dalam 1 waktu agar menghemat resource server ?
+
+Dari masalah tersebut, kita bisa menggunakan library yang bernama `p-limit`.
+
+Pertama install library `p-limit`
+
+```console
+npm install p-limit
+```
+
+Kemudian kita bisa menggunakan libray tersebut sebagai berikut.
+
+```typescript
+import pLimit from "p-limit";
+
+// Batasi concurrency menjadi 1000
+const limit = pLimit(1000);
+
+const urls = [
+  "https://example.com/api/data1",
+  "https://example.com/api/data2",
+  // URL lainnya
+];
+
+const input = urls.map((url) => {
+  // Bungkus fetch dengan function limit()
+  return limit(() => fetch(url));
+});
+
+const responses = await Promise.all(input);
+```
+
+Dengan kode di atas, p-limit akan memastikan bahwa tidak lebih dari 1000 request fetch yang aktif berjalan secara bersamaan. Begitu salah satu request selesai (Promise resolve atau reject), p-limit secara otomatis akan mengambil fungsi request berikutnya dari antrian untuk dijalankan.
