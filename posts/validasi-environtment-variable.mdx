@@ -1,0 +1,56 @@
+---
+published_at: 2025-04-07
+updated_at: 2025-04-07
+title: "Validasi Environment Variable dengan Zod"
+description: ""
+thumbnail: ""
+show_thumbnail: true
+show_toc: false
+is_published: true
+---
+
+Dari pengalaman, hal yang sering terlupakan ketika melakukan deployment adalah kita lupa menambahkan environtment variable baru, karena tidak ada validasi pada saat startup aplikasi, masalah ini baru terdeteksi ketika fitur terkait digunakan oleh user, menyebabkan error runtime dan potensi crash aplikasi.
+
+```bash
+process.env.MY_NEW_VARIABLE is not defined
+```
+Untuk menghindari hal ini kita bisa menggunakan prinspip `fail fast` dimana aplikasi tidak dapat berjalan sampai environment variable yang dibutuhkan terisi. Dengan begitu, kita dapat memperbaiki error sesegera mungkin, tanpa aplikasi diakses user atau bahkan sebelum deployment selesai sepenuhnya.
+
+Di sini kita bisa memanfaatkan  library `znv` dan `zod` untuk memvalidasi environment variable yang kita gunakan.
+
+```shell
+npm install znv zod
+```
+
+Kemudian kita bisa menggunakannya sebagai berikut
+
+```ts
+import { parseEnv } from "znv";
+import { z } from "zod";
+
+export const env = parseEnv(process.env, {
+  NODE_ENV: z.enum(["development", "production"]).default("development"),
+  DATABASE_URL: z.string(),
+});
+
+console.log(env);
+
+```
+
+Ketika kita melakukan re-deploy, dan melupakan environment variable yang dibutuhkan, maka process nodejs akan berhenti dan menampilkan error seperti berikut
+
+```console
+Error: Errors found while parsing environment:
+  [DATABASE_URL]:
+    This field is required.
+    (received undefined)
+```
+
+Selain validasi, kita juga mendapatkan type safety dari zod, hal ini membantu karena kita akan mendapatkan autocomplete ketika mengakses environment variable.
+
+```ts
+const env: DeepReadonlyObject<{
+    NODE_ENV: "development" | "production";
+    DATABASE_URL: string;
+}>
+```
