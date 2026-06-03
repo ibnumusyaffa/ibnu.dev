@@ -45,13 +45,6 @@ export default function About() {
             </li>
           </ul>
 
-          <h3>What I Build</h3>
-          <ul>
-            <li>API Integrations &amp; Data Synchronization Systems</li>
-            <li>Production-Ready Web and Mobile Applications</li>
-            <li>Scalable Backend Services</li>
-          </ul>
-
           <p>Have an idea? Let&apos;s build it.</p>
 
           <p>
@@ -62,24 +55,6 @@ export default function About() {
 
           <h3>Contact</h3>
           <ul className="space-y-4 not-prose pl-2 font-medium">
-            <li className="flex items-center gap-3">
-              <svg
-                className="size-4.5 flex-shrink-0"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-              </svg>
-              <a
-                href="https://x.com/ibnumusyaffa"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-700 hover:text-blue-900 no-underline"
-              >
-                x.com/ibnumusyaffa
-              </a>
-            </li>
             <li className="flex items-center gap-3">
               <svg
                 className="size-4.5 flex-shrink-0"
