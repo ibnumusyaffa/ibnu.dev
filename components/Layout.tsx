@@ -14,10 +14,10 @@ export default function Layout({ children }: LayoutProps) {
             <Link href="/" className="text-xl font-medium">
               Ibnu.dev
             </Link>
-            <div className="flex gap-6">
-              {/* <Link href="/" className="">
-                Blog
-              </Link> */}
+             <div className="flex gap-6">
+              <Link href="/portofolio" className="">
+                Portfolio
+              </Link>
 
               <Link href="/about" className="">
                 About

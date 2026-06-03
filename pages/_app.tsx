@@ -1,6 +1,7 @@
 import type { AppProps } from "next/app";
 import Layout from "@/components/Layout";
 import "@/styles/globals.css";
+import "yet-another-react-lightbox/styles.css";
 
 import { JetBrains_Mono, Inter } from "next/font/google";
 import { SpeedInsights } from '@vercel/speed-insights/next';

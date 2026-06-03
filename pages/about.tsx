@@ -5,42 +5,62 @@ export default function About() {
     <>
       <Meta
         title="About | Ibnu Musyaffa"
-        description="Tulisan seputar pengembangan perangkat lunak dan teknologi lainnya"
+        description="Full Stack Engineer building scalable web applications and business systems."
         url="https://ibnu.dev"
       ></Meta>
 
       <div className="md:w-[50%] mx-auto bg-white border-2 border-black p-5 md:p-10 min-h-screen">
         <div className="prose">
-          <h2>Tentang Saya</h2>
+          <h2>Hi!</h2>
           <p>
-            Halo! Saya <strong>Ibnu Musyaffa</strong>, seorang Software Engineer
-            dari Jawa Tengah, Indonesia. 
+            I&apos;m Ibnu, a Full Stack Engineer with over 10 years of
+            experience building scalable web applications and business systems.
           </p>
 
           <p>
-            Di blog ini, saya berbagi pengalaman dan wawasan seputar
-            pengembangan perangkat lunak dan teknologi web.
+            I help businesses build reliable software, from frontend and
+            backend development to infrastructure and production deployment.
           </p>
 
-          <h3>Skillset</h3>
+          <p>My core technical skills include:</p>
           <ul>
             <li>
-              <strong>Language:</strong> Javascript/Typescript, PHP, Golang
+              <strong>Languages:</strong> JavaScript, TypeScript, Node.js, Go,
+              PHP
             </li>
             <li>
-              <strong>Framework/Libraries:</strong> React, Next.js, Node.js,
-              Laravel, Tanstack Router/Start, Tailwind CSS
+              <strong>Frameworks/Libraries:</strong> React, React Native,
+              Next.js, TanStack Start, Hono
             </li>
             <li>
-              <strong>Database:</strong> MySQL, Postgres, Elasticsearch, Redis, MongoDB
+              <strong>Databases:</strong> MySQL, PostgreSQL, Redis,
+              Elasticsearch, ClickHouse
             </li>
             <li>
-              <strong>Infrastructure/Ops:</strong> Linux, Docker, Kubernetes,
-              Grafana Stack
+              <strong>Infrastructure &amp; DevOps:</strong> Docker, Kubernetes,
+              Linux, AWS
+            </li>
+            <li>
+              <strong>Others:</strong> Cloudflare, Convex, Vercel
             </li>
           </ul>
 
-          <h3>Kontak</h3>
+          <h3>What I Build</h3>
+          <ul>
+            <li>API Integrations &amp; Data Synchronization Systems</li>
+            <li>Production-Ready Web and Mobile Applications</li>
+            <li>Scalable Backend Services</li>
+          </ul>
+
+          <p>Have an idea? Let&apos;s build it.</p>
+
+          <p>
+            Send me a quick outline of your project, even if it&apos;s still
+            rough. I&apos;ll help you identify what you need and the most
+            efficient way to build it.
+          </p>
+
+          <h3>Contact</h3>
           <ul className="space-y-4 not-prose pl-2 font-medium">
             <li className="flex items-center gap-3">
               <svg
@@ -118,8 +138,6 @@ export default function About() {
               </a>
             </li>
           </ul>
-
-          <p>Terima kasih sudah berkunjung!</p>
         </div>
       </div>
     </>
